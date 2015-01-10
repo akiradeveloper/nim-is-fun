@@ -49,3 +49,23 @@ inc(a)
 echo a
 
 type Fun = proc (a: string)
+
+# static switch (like if macro in C)
+const onHeap = false
+when onHeap:
+  type MyType = ref object
+    x: int
+else:
+  type MyType = object
+    x: int
+
+proc doMyType(t: typedesc[MyType]) =
+  var obj: t
+  when onHeap:
+    new(obj)
+  else:
+    discard
+  obj.x = 10
+  echo obj.x
+
+doMyType(MyType)
